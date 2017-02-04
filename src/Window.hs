@@ -24,7 +24,7 @@ import Graphics.X11.Xinerama
 import Foreign.C.Types (CLong)
 
 import Data.Function (on)
-import Data.List (maximumBy)
+import Data.List (genericIndex, genericLength, maximumBy, minimumBy)
 import Data.Maybe (fromMaybe)
 import System.Posix.Process (getProcessID)
 
@@ -90,9 +90,10 @@ setPosition c p rs ht =
     mh h' = max (fi h') h
     ny' h' = ry + fi (rh - mh h')
     safeIndex i = lookup i . zip [0..]
-    picker = if pickBroadest c
-             then maximumBy (compare `on` rect_width)
-             else head
+    picker = case displayChoice c of
+      Narrowest -> minimumBy (compare `on` rect_width)
+      Widest -> maximumBy (compare `on` rect_width)
+      Index i -> \rs -> genericIndex rs (min i (genericLength rs))
 
 setProperties :: Config -> Display -> Window -> IO ()
 setProperties c d w = do

@@ -18,11 +18,12 @@ module Config
     ( -- * Configuration
       -- $config
       Config (..)
-    , XPosition (..), Align (..), Border(..)
+    , XPosition (..), Align (..), Border(..), DisplayChoice (..)
     , defaultConfig
     , runnableTypes
     ) where
 
+import Numeric.Natural
 
 import Commands
 import {-# SOURCE #-} Runnable
@@ -64,9 +65,7 @@ data Config =
            , allDesktops :: Bool    -- ^ Tell the WM to map to all desktops
            , overrideRedirect :: Bool -- ^ Needed for dock behaviour in some
                                       --   non-tiling WMs
-           , pickBroadest :: Bool   -- ^ Use the broadest display
-                                    --   instead of the first one by
-                                    --   default
+           , displayChoice :: DisplayChoice -- ^ Which display to show xmobar on
            , lowerOnStart :: Bool   -- ^ lower to the bottom of the
                                     --   window stack on initialization
            , persistent :: Bool     -- ^ Whether automatic hiding should
@@ -107,6 +106,11 @@ data Border = NoBorder
             | FullBM Int
               deriving ( Read, Eq )
 
+data DisplayChoice = Narrowest
+                   | Widest
+                   | Index Natural
+                   deriving ( Read, Eq )
+
 -- | The default configuration values
 defaultConfig :: Config
 defaultConfig =
@@ -126,7 +130,7 @@ defaultConfig =
            , persistent = False
            , allDesktops = True
            , overrideRedirect = True
-           , pickBroadest = False
+           , displayChoice = Index 0
            , iconRoot = "."
            , commands = [ Run $ Date "%a %b %_d %Y * %H:%M:%S" "theDate" 10
                         , Run StdinReader]

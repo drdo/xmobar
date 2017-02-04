@@ -313,11 +313,9 @@ Other configuration options:
       to set this option to `False` so that it behaves as a docked
       application.  Defaults to `True`.
 
-`pickBroadest`
-:     When multiple displays are available, xmobar will choose by default
-      the first one to place itself.  With this flag set to `True`
-      (the default is `False`) it will choose the broadest one
-      instead.
+`displayChoice`
+:     Choice of display for xmobar to place itself.
+      Can be Narrowest, Widest, or Index <Natural>. The default is Index 0.
 
 `persistent`
 :     When True the window status is fixed i.e. hiding or revealing is not
